@@ -1,0 +1,67 @@
+# Here's an example of an Ansible playbook that uses the Azure modules to create a virtual server. Make sure you have the necessary Azure credentials and Ansible installed before running this playbook:
+```yaml
+---
+- name: Create Azure VM
+  hosts: localhost
+  tasks:
+    - name: Create resource group
+      azure.azcollection.azure_rm_resourcegroup:
+        name: myResourceGroup
+        location: eastus
+        tags:
+          environment: dev
+
+    - name: Create virtual network
+      azure.azcollection.azure_rm_virtualnetwork:
+        resource_group: myResourceGroup
+        name: myVnet
+        address_prefixes: "10.0.0.0/16 <http://10.0.0.0/16> "
+        dns_servers: ["10.0.0.4", "10.0.0.5"]
+
+    - name: Create public IP address
+      azure.azcollection.azure_rm_publicipaddress:
+        resource_group: myResourceGroup
+        allocation_method: Static
+        name: myPublicIP
+
+    - name: Create network security group
+      azure.azcollection.azure_rm_securitygroup:
+        resource_group: myResourceGroup
+        name: myNetworkSecurityGroup
+        rules:
+          - name: allowSSH
+            protocol: Tcp
+            destination_port_range: 22
+            access: Allow
+            priority: 1001
+            direction: Inbound
+
+    - name: Create virtual network interface card
+      azure.azcollection.azure_rm_networkinterface:
+        resource_group: myResourceGroup
+        name: myNIC
+        virtual_network: myVnet
+        subnet_name: default
+        public_ip_name: myPublicIP
+        security_group_name: myNetworkSecurityGroup
+
+    - name: Create virtual machine
+      azure.azcollection.azure_rm_virtualmachine:
+        resource_group: myResourceGroup
+        name: myVM
+        vm_size: Standard_DS1_v2
+        vnet_name: myVnet
+        subnet_name: default
+        public_ip_name: myPublicIP
+        image:
+          offer: UbuntuServer
+          publisher: Canonical
+          sku: 18.04-LTS
+          version: latest
+        admin_username: azureuser
+        ssh_password_enabled: false
+        ssh_public_keys:
+          - path: /home/azureuser/.ssh/authorized_keys
+            key_data: "{{ lookup('file', '/path/to/public/key/file.pub') }}"
+```
+# Make sure to replace the placeholders like `myResourceGroup`, `myVnet`, and others with your desired values. Also, make sure to replace the SSH public key path with your own public key.
