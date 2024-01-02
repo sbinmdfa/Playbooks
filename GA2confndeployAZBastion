@@ -1,8 +1,6 @@
-Yes, you can use GitHub Actions to automate the configuration and deployment of Azure Bastion. You would typically create workflow files in your GitHub repository to define the steps for setting up and deploying Azure Bastion. These workflow files can include Azure CLI commands, Azure PowerShell scripts, or other tools to interact with Azure resources.
-
-Ensure that you have the necessary Azure credentials and secrets securely stored as GitHub Secrets, and then use them in your GitHub Actions workflow.
-
-Here's a simplified example of a GitHub Actions workflow for deploying Azure Bastion:
+# Use GitHub Actions to automate the configuration and deployment of Azure Bastion. You would typically create workflow files in your GitHub repository to define the steps for setting up and deploying Azure Bastion. These workflow files can include Azure CLI commands, Azure PowerShell scripts, or other tools to interact with Azure resources.
+# Ensure that you have the necessary Azure credentials and secrets securely stored as GitHub Secrets, and then use them in your GitHub Actions workflow.
+# Here's a simplified example of a GitHub Actions workflow for deploying Azure Bastion:
 
 ```yaml
 name: Deploy Azure Bastion
