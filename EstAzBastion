@@ -1,0 +1,36 @@
+# To establish connectivity to Azure Bastion within a GitHub Action workflow, you'll configure this within your Ansible playbook used in the GitHub Action.
+# Within the Ansible playbook (azure_deploy.yml or any other playbook you're using), you'll define the connection settings including the Azure Bastion details. Ansible allows you to specify connection information in the playbook itself.
+# Here's an example of how you can configure Ansible to use Azure Bastion as the jump host:
+
+yaml
+Copy code
+---
+- name: Azure resource deployment
+  hosts: localhost
+  connection: local
+  gather_facts: no
+
+  tasks:
+    - name: Create Azure resources
+      azure_rm_virtualnetwork:
+        resource_group: "your_resource_group"
+        name: "your_virtual_network"
+        address_prefixes: "{{ your_address_prefix }}"
+        state: present
+        azure_rm_use_bastion: yes
+        azure_rm_bastion_hostname: "your_bastion_hostname"
+        azure_rm_bastion_username: "your_bastion_username"
+        ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
+      register: vnet_creation
+
+    # Add more tasks for managing other Azure resources if needed
+
+  # Add handlers, roles, or other sections of the playbook as required Explanation of some key parameters:
+
+azure_rm_use_bastion: Setting this to yes indicates that Ansible should use Azure Bastion as the jump host.
+azure_rm_bastion_hostname: Specify the hostname of your Azure Bastion.
+azure_rm_bastion_username: Provide the username to access Azure Bastion.
+ansible_ssh_common_args: Using this argument with the StrictHostKeyChecking=no option helps avoid host key checking when connecting to Azure Bastion.
+
+# By incorporating these parameters within your Ansible playbook, you establish the connectivity through Azure Bastion for managing Azure resources. Adjust the tasks according to the resources you want to create or manage within Azure.
+# Ensure that the Azure Service Principal credentials needed to authenticate with Azure are securely provided within the GitHub Secrets and accessed in the GitHub Action workflow.
