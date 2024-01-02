@@ -1,10 +1,5 @@
-User
-I need to create a vm on azure but the playbook running on github action need to connect to azure via azure bastion. Because it is private environment
-
-ChatGPT
-Understood! To create an Azure VM using Ansible within a GitHub Action while connecting through Azure Bastion to a private environment, you'll need to configure the Ansible playbook to establish the connection through Azure Bastion and then create the Azure VM.
-
-Here's an example of how your Ansible playbook might look to achieve this:
+# To create an Azure VM using Ansible within a GitHub Action while connecting through Azure Bastion to a private environment, you'll need to configure the Ansible playbook to establish the connection through Azure Bastion and then create the Azure VM.
+# Here's an example of how your Ansible playbook might look to achieve this:
 
 yaml
 Copy code
@@ -47,6 +42,6 @@ your_admin_username and your_admin_password: Credentials for the VM's admin acco
 your_network_interface_name: The name of the network interface the VM should be attached to.
 your_bastion_hostname: The hostname of your Azure Bastion.
 your_bastion_username: Username to access Azure Bastion.
-This playbook defines tasks to create an Azure VM within a specific resource group and location, using Azure Bastion as the jump host to access the private environment.
 
-Ensure that the necessary Azure Service Principal credentials (Client ID, Client Secret, Tenant ID) are securely stored in GitHub Secrets and accessed within the GitHub Action workflow to authenticate with Azure. Adjust the playbook and GitHub Action workflow to suit your specific environment and requirements.
+# This playbook defines tasks to create an Azure VM within a specific resource group and location, using Azure Bastion as the jump host to access the private environment.
+# Ensure that the necessary Azure Service Principal credentials (Client ID, Client Secret, Tenant ID) are securely stored in GitHub Secrets and accessed within the GitHub Action workflow to authenticate with Azure. Adjust the playbook and GitHub Action workflow to suit your specific environment and requirements.
