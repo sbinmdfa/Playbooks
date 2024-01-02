@@ -1,0 +1,90 @@
+# Step-by-step setup including a GitHub Action workflow and an Ansible playbook to connect to an Azure VM using Azure Bastion:
+# 1. Create an Ansible playbook (azure_vm_access.yml):
+# Create an Ansible playbook that connects to the Azure VM through Azure Bastion and performs a simple action, like displaying system information.
+
+yaml
+Copy code
+---
+- name: Access Azure VM via Azure Bastion
+  hosts: localhost
+  connection: local
+  gather_facts: no
+
+  tasks:
+    - name: Run commands on Azure VM via Azure Bastion
+      ansible.builtin.shell: |
+        ssh -o StrictHostKeyChecking=no -J your_bastion_username@your_bastion_hostname 178.90.188.7 "uname -a"
+      register: vm_access
+
+    - debug:
+        var: vm_access.stdout_lines
+Replace placeholders:
+
+your_bastion_username: Username to access Azure Bastion.
+your_bastion_hostname: Hostname of your Azure Bastion.
+178.90.188.7 <http://178.90.188.7> : The private IP address of your Azure VM.
+This playbook executes the uname -a command on the Azure VM through Azure Bastion and prints the output.
+
+2. Set up GitHub repository:
+Ensure you have a GitHub repository with the Ansible playbook (azure_vm_access.yml) committed to it.
+
+3. Configure GitHub Secrets:
+Go to your GitHub repository's settings and navigate to the Secrets section. Add the following secrets:
+
+AZURE_CLIENT_ID: Azure Service Principal Client ID.
+AZURE_SECRET: Azure Service Principal Client Secret.
+AZURE_SUBSCRIPTION_ID: Azure Subscription ID.
+AZURE_TENANT_ID: Azure Tenant ID.
+BASTION_USERNAME: Username to access Azure Bastion.
+BASTION_HOSTNAME: Hostname of your Azure Bastion.
+4. Create GitHub Action Workflow:
+Create a new YAML file (e.g., azure_vm_access_workflow.yml) in the .github/workflows directory of your repository.
+
+yaml
+Copy code
+name: Access Azure VM via Azure Bastion
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  access-azure-vm:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install Azure CLI
+        run: |
+          curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+
+      - name: Install Ansible
+        run: |
+          pip install ansible
+
+      - name: Access Azure VM via Azure Bastion
+        env:
+          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          AZURE_SECRET: ${{ secrets.AZURE_SECRET }}
+          AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          BASTION_USERNAME: ${{ secrets.BASTION_USERNAME }}
+          BASTION_HOSTNAME: ${{ secrets.BASTION_HOSTNAME }}
+        run: ansible-playbook azure_vm_access.yml This GitHub Action workflow performs the following steps:
+
+# Checks out your repository.
+# Sets up Python for compatibility.
+# Installs the Azure CLI to enable connectivity to Azure.
+# Installs Ansible.
+# Executes the azure_vm_access.yml playbook using the provided secrets (Azure Service Principal credentials, Azure Bastion details).
+# Execution:
+# When you push changes to your main branch, this workflow will trigger, running the Ansible playbook to connect to the Azure VM via Azure Bastion and execute the command specified in the playbook.
+# Ensure that your Azure environment allows SSH access through Azure Bastion to the specific VM with the provided private IP address. Adjust the playbook as needed based on your specific Azure setup and desired actions to perform on the VM.
