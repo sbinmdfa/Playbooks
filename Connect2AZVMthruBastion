@@ -1,11 +1,5 @@
-User
-Let say I have a vm in azure with this private IP, 178.90.188.7 and the only options to connect to the azure environment is through azure bastion.
-How can this be done using github action with ansible  
-
-ChatGPT
-Certainly! If you have an Azure VM with a private IP (let's say 178.90.188.7) and the only way to connect to your Azure environment is through Azure Bastion, you can use Ansible within a GitHub Action workflow to manage this Azure VM.
-
-Here's a simplified example of an Ansible playbook (azure_vm_access.yml) to run within a GitHub Action, connecting via Azure Bastion to manage your Azure VM:
+# Use Case: If you have an Azure VM with a private IP (let's say 178.90.188.7) and the only way to connect to your Azure environment is through Azure Bastion, you can use Ansible within a GitHub Action workflow to manage this Azure VM.
+# Here's a simplified example of an Ansible playbook (azure_vm_access.yml) to run within a GitHub Action, connecting via Azure Bastion to manage your Azure VM:
 
 yaml
 Copy code
@@ -29,11 +23,8 @@ your_bastion_username: Username to access Azure Bastion.
 your_bastion_hostname: Hostname of your Azure Bastion.
 178.90.188.7 <http://178.90.188.7> : The private IP address of your Azure VM.
 your_commands_here: Enter the commands you want to execute on the Azure VM.
-In this playbook, the ansible.builtin.shell module is used to execute SSH commands. -J flag (ProxyJump) is used to specify the jump host (Azure Bastion) through which the connection will be established to the Azure VM.
 
-Ensure the SSH key used for authentication to the Azure VM is properly configured and accessible within your GitHub Actions environment.
-
-Within your GitHub Action workflow, you'll need to execute this playbook using the ansible/ansible-playbook GitHub Action or any setup that installs Ansible and triggers the playbook execution. Set up your Azure Service Principal credentials securely in GitHub Secrets to authenticate with Azure.
-
-Note: Make sure you have the necessary permissions and configurations set up in Azure, such as allowing SSH access through Azure Bastion, and your SSH keys are correctly configured on the Azure VM for authentication. Adjust the commands and configuration based on your specific requirements and Azure setup.
-
+# In this playbook, the ansible.builtin.shell module is used to execute SSH commands. -J flag (ProxyJump) is used to specify the jump host (Azure Bastion) through which the connection will be established to the Azure VM.
+# Ensure the SSH key used for authentication to the Azure VM is properly configured and accessible within your GitHub Actions environment.
+# Within your GitHub Action workflow, you'll need to execute this playbook using the ansible/ansible-playbook GitHub Action or any setup that installs Ansible and triggers the playbook execution. Set up your Azure Service Principal credentials securely in GitHub Secrets to authenticate with Azure.
+# Note: Make sure you have the necessary permissions and configurations set up in Azure, such as allowing SSH access through Azure Bastion, and your SSH keys are correctly configured on the Azure VM for authentication. Adjust the commands and configuration based on your specific requirements and Azure setup.
